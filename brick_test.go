@@ -1,10 +1,10 @@
 package pnp
 
 import (
-"testing"
+	"testing"
 )
 
-func TestNumbers (t *testing.T) {
+func TestNumbers(t *testing.T) {
 	a := make(chan int)
 	b := make(chan int)
 	c := make(chan int)
@@ -12,18 +12,18 @@ func TestNumbers (t *testing.T) {
 	go Prefix(c, a, 0)
 	go Copy2(a, b, d)
 	go Plus1(b, c)
-	var sum, check, i  int = 0, 0, 0
+	var sum, check, i int = 0, 0, 0
 	for i < 10 {
 		sum = sum + i
 		check = check + <-d
 		i = i + 1
 	}
 	if check != sum {
-		t.Errorf ("Number funcs - check: %v sum: %v", check, sum )
+		t.Errorf("Number funcs - check: %v sum: %v", check, sum)
 	}
 }
 
-func TestIntegrate (t *testing.T) {
+func TestIntegrate(t *testing.T) {
 	a := make(chan int)
 	b := make(chan int)
 	c := make(chan int)
@@ -35,21 +35,21 @@ func TestIntegrate (t *testing.T) {
 	go Prefix(c, a, 0)
 	go Copy2(a, b, d)
 	go Plus1(b, c)
-	go Plus (d, g, e)
+	go Plus(d, g, e)
 	go Prefix(f, g, 0)
 	go Copy2(e, f, h)
-	var sum, check, i  int = 0, 0, 0
+	var sum, check, i int = 0, 0, 0
 	for i < 10 {
 		sum = sum + i
-		check =  <-h
+		check = <-h
 		i = i + 1
 	}
 	if check != sum {
-		t.Errorf ("Integrate Funcs - check: %v sum: %v", check, sum )
+		t.Errorf("Integrate Funcs - check: %v sum: %v", check, sum)
 	}
 }
 
-func TestIntegrateP (t *testing.T) {
+func TestIntegrateP(t *testing.T) {
 	a := make(chan int)
 	b := make(chan int)
 	c := make(chan int)
@@ -61,21 +61,21 @@ func TestIntegrateP (t *testing.T) {
 	go Prefix(c, a, 0)
 	go Copy2(a, b, d)
 	go Plus1(b, c)
-	go PlusP (d, g, e)  // does not work with PlusP but does with Plus
+	go PlusP(d, g, e) // now works with PlusP in the release go.1.2.2 !!
 	go Prefix(f, g, 0)
 	go Copy2(e, f, h)
-	var sum, check, i  int = 0, 0, 0
+	var sum, check, i int = 0, 0, 0
 	for i < 10 {
 		sum = sum + i
-		check =  <-h
+		check = <-h
 		i = i + 1
 	}
 	if check != sum {
-		t.Errorf ("IntegrateP Funcs - check: %v sum: %v", check, sum )
+		t.Errorf("IntegrateP Funcs - check: %v sum: %v", check, sum)
 	}
 }
 
-func TestReverseIntegrate (t *testing.T) {
+func TestReverseIntegrate(t *testing.T) {
 	a := make(chan int)
 	b := make(chan int)
 	c := make(chan int)
@@ -91,23 +91,23 @@ func TestReverseIntegrate (t *testing.T) {
 	go Prefix(c, a, 0)
 	go Copy2(a, b, d)
 	go Plus1(b, c)
-	go Plus (d, g, e)
+	go Plus(d, g, e)
 	go Prefix(f, g, 0)
 	go Copy2(e, f, h)
-	go Minus (i, k, l)
+	go Minus(i, k, l)
 	go Prefix(j, k, 0)
 	go Copy2(h, i, j)
-	var check, n  int = 0, 0
+	var check, n int = 0, 0
 	for n < 10 {
-		check =  <-l
+		check = <-l
 		n = n + 1
 	}
 	if check != n-1 {
-		t.Errorf ("Reverse Integrate Funcs - check: %v i: %v", check, n )
+		t.Errorf("Reverse Integrate Funcs - check: %v i: %v", check, n)
 	}
 }
 
-func TestSquares (t *testing.T) {
+func TestSquares(t *testing.T) {
 	a := make(chan int)
 	b := make(chan int)
 	c := make(chan int)
@@ -123,20 +123,19 @@ func TestSquares (t *testing.T) {
 	go Prefix(c, a, 0)
 	go Copy2(a, b, d)
 	go Plus1(b, c)
-	go Plus (d, g, e)
+	go Plus(d, g, e)
 	go Prefix(f, g, 0)
 	go Copy2(e, f, h)
-	go Plus (i, k, l)
+	go Plus(i, k, l)
 	go Tail(j, k)
 	go Copy2(h, i, j)
-	var check, n  int = 0, 0
+	var check, n int = 0, 0
 	for n < 10 {
-		check =  <-l
+		check = <-l
 		n = n + 1
 	}
 	var square int = n * n
 	if check != square {
-		t.Errorf ("Square Funcs - check: %v square: %v", check, square )
+		t.Errorf("Square Funcs - check: %v square: %v", check, square)
 	}
 }
-
