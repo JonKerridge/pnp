@@ -286,17 +286,34 @@ func Tabulate(in []chan int,
 			i = i + 1
 		}
 		wg.Wait()
+		i = 0
 		for i < l {
 			s = s + fmt.Sprintf("\t%v", values[i])
 			i = i + 1
 		}
+		s = s + fmt.Sprintf("\n")
+		out <- s
+	}
+}
+
+/* ConvertIntStr is a process that converts and integer into its string
+representation.  Int values are input from the in channel and the equivalent
+string is output on the out channel
+*/
+func ConvertIntStr(in chan int,
+	out chan string) {
+	var v int = 0
+	var s string
+	for {
+		v = <-in
+		s = fmt.Sprintf(" %v, ", v)
 		out <- s
 	}
 }
 
 /*
-Display takes a string input from the in channel and outputs its values
-to the console.
+Display takes a string input from the in channel and outputs its value
+to stdout. It does this forever.
 */
 func Display(in chan string) {
 	var s string
@@ -304,6 +321,25 @@ func Display(in chan string) {
 		s = <-in
 		fmt.Printf("%v\n", s)
 	}
+}
+
+/*
+Console is similar to Display in that string input from the in channel
+are output to stdout.  Initially, a title string is output.  Only limit
+lines are output
+*/
+func Console(in chan string,
+	title string,
+	limit int) {
+	var s string
+	var i int = 0
+	fmt.Printf("%v\n", title)
+	for i < limit {
+		s = <-in
+		fmt.Printf("%v\n", s)
+		i = i + 1
+	}
+	fmt.Println("%v\n", "Console Output Finished")
 }
 
 /*
