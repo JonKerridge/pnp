@@ -10,16 +10,13 @@ Channels that are used to send values are named out.
 
 Multiple channels are differentiated by appending a digit to the name.
 
-Each func operates in a for {} loop and thus any network created has to
-be terminated by the user unless the output of  a network is limited bt
+Each func operates in a for {} loop and thus the output of  a network is limited by
 a final phase that limits the output.
 
 The functions Numbers and Squares show how many of these simple processes
 can be used to create complex behaviour simply by composing them into networks.
 
-The hello.go example shows how these can be made to work in a more complex example.
-
-The exerciseQueue.go exxample shows the operation of Producer, Queue and Prompt.
+The program demos.go shows how they can be used
 */
 package pnp
 
@@ -80,7 +77,7 @@ func Plus1(in chan int,
 RecvValue receives a single value from the in channel which it stores in
 the variable valuePtr.  RecvValue does not contain a for {} loop;
 it terminates once the value has been read from the in channel
-See its use in PlusP and other functions
+See its use in Plus and other functions
 */
 func RecvValue(valuePtr *int,
 	in chan int,
@@ -147,7 +144,7 @@ func Tail(in chan int,
 }
 
 /*
-PlusP receives two values one from each of its in channels in1 and in2
+Plus receives two values one from each of its in channels in1 and in2
 and it then sends the sum of the values to the out channel.
 It uses go routine RecvValue to read the values
 regardless of the order in which they arrive.
@@ -157,7 +154,7 @@ because go routines have no concept of
 coordinated termination as say happens in occam or JCSP
 and also in Unix as in fork / join
 */
-func PlusP(in1 chan int,
+func Plus(in1 chan int,
 	in2 chan int,
 	out chan int) {
 	var v1, v2 int = 0, 0
@@ -193,33 +190,9 @@ func Minus(in1 chan int,
 }
 
 /*
-Plus receives two values one from each of its in channels in1 and in2
-and it then sends the sum of the values to the out channel.
-The contained select statement ensures that a pair of values are received,
-one from each channel, regardless of the order in which they arrive.
-*/
-func Plus(in1 chan int,
-	in2 chan int,
-	out chan int) {
-	var v1, v2 int = 0, 0
-	for {
-		//read in1 and in2 in pseudo parallel
-		select {
-		case v1 = <-in1:
-			v2 = <-in2
-		case v2 = <-in2:
-			v1 = <-in1
-		}
-		out <- v1 + v2
-	}
-}
-
-/*
 Delay introduces a time delay into a network.
 
-The current formulation does not work with go1.1.2.  An issue has been
-raised to which the response was that the formulation should work with the next
-release of the scheduler (15th August 2013)
+The current formulation does not work with go1.2.2.
 */
 func Delay(in chan int,
 	out chan int,
@@ -314,6 +287,8 @@ func ConvertIntStr(in chan int,
 /*
 Display takes a string input from the in channel and outputs its value
 to stdout. It does this forever.
+
+The current formulation does not work with go1.2.2.
 */
 func Display(in chan string) {
 	var s string
@@ -327,6 +302,8 @@ func Display(in chan string) {
 Console is similar to Display in that string input from the in channel
 are output to stdout.  Initially, a title string is output.  Only limit
 lines are output
+
+The current formulation does not work with go1.2.2.
 */
 func Console(in chan string,
 	title string,
